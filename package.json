@@ -1,0 +1,16 @@
+{
+  "name": "secureapigateway",
+  "version": "1.0.0",
+  "description": "routes requests to backend services while enforcing authentication, input validation, rate limiting, and access control ",
+  "license": "ISC",
+  "author": "Austin Abeln, Noor Al Huda, Tyler Stroud",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "typescript": "^5.9.3"
+  }
+}
