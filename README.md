@@ -9,8 +9,8 @@ Back End: Node.js <img src="./public/images/nodejs.svg" alt="nodejs logo" width=
 
 The repo requires an installation of nodejs.  
 Check if you have node on your system by typing in the following in your terminal:  
-  
-`node -v`<br>
+
+`node -v`<br><br>
 I use npm, but pnpm, yarn, or yaml should suffice for this version check.
 
 As of creating this repo, I am using node v22.15.0.
