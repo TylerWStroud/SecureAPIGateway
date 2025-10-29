@@ -27,5 +27,14 @@ Once you run through the installation, open your terminal and run the following 
 cd to the folder containing index.mjs file  
 `cd api-gateway`  
 run the following command  
-`node index.mjs`  
+`npm start`  
 The terminal should say "server running at..." and provide a link to the server you can view.
+
+## Running front end
+from parent folder, cd to frontend
+`cd frontend`
+run the following command
+`npm run dev` => hit o to run the front end locally
+
+## !! IMPORTANT !!
+Since we do not have an all encompassing run script you need to run the api-gateway first, and in another terminal run the front end. 
