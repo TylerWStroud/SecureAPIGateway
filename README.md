@@ -31,9 +31,9 @@ run the following command
 The terminal should say "server running at..." and provide a link to the server you can view.
 
 ## Running front end
-from parent folder, cd to frontend
-`cd frontend`
-run the following command
+from parent folder, cd to frontend  
+`cd frontend`  
+run the following command  
 `npm run dev` => hit o to run the front end locally
 
 ## !! IMPORTANT !!
