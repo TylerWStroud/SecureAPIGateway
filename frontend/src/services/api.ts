@@ -10,7 +10,7 @@ import axios from "axios";
 
 // API config (vite-specific environment variable)
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api"; // default fallback to local server
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"; // default fallback to local server
 
 // creates reusable axios instance
 export const api = axios.create({
@@ -24,7 +24,7 @@ export const api = axios.create({
   baseURL: API_BASE_URL, // starting part of all URLs (goes to localhost or specified server)
   headers: {
     "Content-Type": "application/json", // default header for JSON data (tells server we're sending JSON data)
-    "X-API-Key": "my-secret-api-key", // example of custom header for API authentication
+    "X-API-Key": "user-api-key-123", // example of custom header for API authentication
   },
   timeout: 10000, // cancels requests taking longer than 10 seconds
 });
@@ -111,8 +111,9 @@ export const orderService = {
   getOrders: (): Promise<{ data: ApiResponse<Order[]> }> =>
     api.get("/api/orders"),
 
-  createOrder: (orderData: Omit<Order, "id">): Promise<{ data: ApiResponse<any> }> =>
-    api.post("/api/orders", orderData),
+  createOrder: (
+    orderData: Omit<Order, "id">
+  ): Promise<{ data: ApiResponse<any> }> => api.post("/api/orders", orderData),
 };
 
 export const healthService = {

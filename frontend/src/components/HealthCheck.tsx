@@ -35,7 +35,7 @@ export const HealthCheck: React.FC = () => {
             {health && (
                 <div className="health-info">
                     <p><strong>Status: </strong> {health.status}</p>
-                    <p><strong>Timestamp: </strong> {health.timeStamp}</p>
+                    <p><strong>Timestamp: </strong> {health.timestamp}</p>
                     <p><strong>Uptime: </strong> {health.uptime}</p>
                 </div>
             )}
