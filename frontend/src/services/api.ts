@@ -114,3 +114,8 @@ export const orderService = {
   createOrder: (orderData: Omit<Order, "id">): Promise<{ data: ApiResponse<any> }> =>
     api.post("/api/orders", orderData),
 };
+
+export const healthService = {
+  checkHealth: (): Promise<{ data: ApiResponse<{ status: string }> }> =>
+    api.get("/health"),
+};

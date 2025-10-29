@@ -1,35 +1,53 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import { UserList } from './components/UserList';
+import { ProductList } from './components/ProductList';
+import { OrderList } from './components/OrderList';
+import { HealthCheck } from './components/HealthCheck';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeTab, setActiveTab] = useState<'users' | 'products' | 'orders' | 'health'>('users');
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="App">
+      <header className="App-header">
+        <h1>Secure API Gateway - Frontend</h1>
+        <nav>
+          <button 
+            className={activeTab === 'users' ? 'active' : ''}
+            onClick={() => setActiveTab('users')}
+          >
+            Users
+          </button>
+          <button 
+            className={activeTab === 'products' ? 'active' : ''}
+            onClick={() => setActiveTab('products')}
+          >
+            Products
+          </button>
+          <button 
+            className={activeTab === 'orders' ? 'active' : ''}
+            onClick={() => setActiveTab('orders')}
+          >
+            Orders
+          </button>
+          <button 
+            className={activeTab === 'health' ? 'active' : ''}
+            onClick={() => setActiveTab('health')}
+          >
+            Health Check
+          </button>
+        </nav>
+      </header>
+
+      <main>
+        {activeTab === 'users' && <UserList />}
+        {activeTab === 'products' && <ProductList />}
+        {activeTab === 'orders' && <OrderList />}
+        {activeTab === 'health' && <HealthCheck />}
+      </main>
+    </div>
+  );
 }
 
-export default App
+export default App;
