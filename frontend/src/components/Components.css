@@ -1,0 +1,71 @@
+/* GLOBALS */
+.button-container{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.two-button-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.two-button-container > button:first-child{
+    grid-column: 2;
+}
+.refresh-button{
+    grid-column: 3;
+    padding: 5px;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    justify-self: end;
+}
+.refresh-button img{
+    width: 20px;
+    height: auto;
+}
+.refresh-button:hover img{
+    transform: rotate(360deg);
+}
+
+.light .refresh-button img{
+    filter: invert(1);
+}
+
+.item-container{
+    border: 1px solid #555555;
+    padding: 1rem;
+    margin: 1rem 0;
+    text-align: left;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.item-card{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10rem;
+    border-bottom: 1px dashed  #555555
+}
+
+/* ORDERS */
+.order-card{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    align-items: center;
+    border-bottom: 1px dashed  #555555
+}
+
+/* PRODUCTS */
+
+/* USERS */
+.user-card{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    border-bottom: 1px dashed  #555555
+}
+/* HEALTH CHECK */

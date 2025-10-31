@@ -204,8 +204,8 @@ const server = http.createServer(handleRequest);
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`🚀 Secure API Gateway running at http://localhost:${PORT}/`);
-  console.log(`📋 Available endpoints:`);
+  console.log(`Secure API Gateway running at http://localhost:${PORT}/`);
+  console.log(`Available endpoints:`);
   console.log(`   GET  /api/users    - Get all users`);
   console.log(`   POST /api/users    - Create user`);
   console.log(`   GET  /api/products - Get all products`);

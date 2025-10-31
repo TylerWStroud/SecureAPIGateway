@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { userService, type User, type ApiResponse } from '../services/api';
+import React, { useState, useEffect, useRef } from "react";
+import { userService, type User, type ApiResponse } from "../services/api";
+import RefreshButton from "./RefreshButton";
+import "./Components.css";
 
 export const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -13,8 +15,8 @@ export const UserList: React.FC = () => {
       const response = await userService.getUsers();
       setUsers(response.data.data);
     } catch (err) {
-      setError('Failed to fetch users');
-      console.error('Error fetching users:', err);
+      setError("Failed to fetch users");
+      console.error("Error fetching users:", err);
     } finally {
       setLoading(false);
     }
@@ -23,15 +25,15 @@ export const UserList: React.FC = () => {
   const createUser = async () => {
     const newUser = {
       name: `User ${Date.now()}`,
-      email: `user${Date.now()}@example.com`
+      email: `user${Date.now()}@example.com`,
     };
 
     try {
       await userService.createUser(newUser);
       fetchUsers(); // Refresh the list
     } catch (err) {
-      setError('Failed to create user');
-      console.error('Error creating user:', err);
+      setError("Failed to create user");
+      console.error("Error creating user:", err);
     }
   };
 
@@ -45,11 +47,13 @@ export const UserList: React.FC = () => {
   return (
     <div>
       <h2>Users</h2>
-      <button onClick={createUser}>Create New User</button>
-      <button onClick={fetchUsers}>Refresh</button>
-      
-      <div className="user-list">
-        {users.map(user => (
+      <nav className="two-button-container">
+        <button onClick={createUser}>Create New User</button>
+        <RefreshButton onClick={fetchUsers} />
+      </nav>
+
+      <div className="item-container">
+        {users.map((user) => (
           <div key={user.id} className="user-card">
             <h3>{user.name}</h3>
             <p>{user.email}</p>

@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { productService, type Product } from '../services/api';
+import React, { useState, useEffect } from "react";
+import { productService, type Product } from "../services/api";
+import RefreshButton from "./RefreshButton";
+import "./Components.css";
 
 export const ProductList: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -13,8 +15,8 @@ export const ProductList: React.FC = () => {
       const response = await productService.getProducts();
       setProducts(response.data.data);
     } catch (err) {
-      setError('Failed to fetch products');
-      console.error('Error fetching products:', err);
+      setError("Failed to fetch products");
+      console.error("Error fetching products:", err);
     } finally {
       setLoading(false);
     }
@@ -30,10 +32,12 @@ export const ProductList: React.FC = () => {
   return (
     <div>
       <h2>Products</h2>
-      <button onClick={fetchProducts}>Refresh</button>
-      
+      <nav className="button-container">
+        <RefreshButton onClick={fetchProducts} />
+      </nav>
+
       <div className="product-list">
-        {products.map(product => (
+        {products.map((product) => (
           <div key={product.id} className="product-card">
             <h3>{product.name}</h3>
             <p>${product.price}</p>

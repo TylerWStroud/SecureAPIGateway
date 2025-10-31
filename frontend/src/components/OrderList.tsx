@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { orderService, type Order } from '../services/api';
+import React, { useState, useEffect } from "react";
+import { orderService, type Order } from "../services/api";
+import RefreshButton from "./RefreshButton";
+
+import "./Components.css";
 
 export const OrderList: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -13,8 +16,8 @@ export const OrderList: React.FC = () => {
       const response = await orderService.getOrders();
       setOrders(response.data.data);
     } catch (err) {
-      setError('Failed to fetch orders');
-      console.error('Error fetching orders:', err);
+      setError("Failed to fetch orders");
+      console.error("Error fetching orders:", err);
     } finally {
       setLoading(false);
     }
@@ -24,15 +27,15 @@ export const OrderList: React.FC = () => {
     const newOrder = {
       userId: 1,
       productId: 1,
-      status: 'pending'
+      status: "pending",
     };
 
     try {
       await orderService.createOrder(newOrder);
       fetchOrders(); // Refresh the list
     } catch (err) {
-      setError('Failed to create order');
-      console.error('Error creating order:', err);
+      setError("Failed to create order");
+      console.error("Error creating order:", err);
     }
   };
 
@@ -46,11 +49,13 @@ export const OrderList: React.FC = () => {
   return (
     <div>
       <h2>Orders</h2>
-      <button onClick={createOrder}>Create New Order</button>
-      <button onClick={fetchOrders}>Refresh</button>
-      
-      <div className="order-list">
-        {orders.map(order => (
+      <nav className="two-button-container">
+        <button onClick={createOrder}>Create New Order</button>
+        <RefreshButton onClick={fetchOrders} />
+      </nav>
+
+      <div className="item-container">
+        {orders.map((order) => (
           <div key={order.id} className="order-card">
             <h3>Order #{order.id}</h3>
             <p>User ID: {order.userId}</p>
