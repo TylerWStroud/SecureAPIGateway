@@ -1,5 +1,10 @@
 import http from "http";
 import { URL } from "url";
+import dotenv from "dotenv";
+import { handleLogin, authenticate } from "./middleware/auth.js";
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Mock backend services
 const backendServices = {
@@ -8,9 +13,23 @@ const backendServices = {
   orders: "http://localhost:3003",
 };
 
+// Security headers middleware
+function setSecurityHeaders(res) {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  // res.setHeader("Referrer-Policy", "no-referrer");
+  // res.setHeader("Content-Security-Policy", "default-src 'self'");
+  res.setHeader(
+    "Strict-Transport-Security",
+    "max-age=31536000; includeSubDomains"
+  );
+}
+
 // Request logging function
 function logRequest(req, res, startTime) {
-  const duration = Date.now() - startTime;
+  const duration = Date.now() - startTime; // request duration in ms
+  const user = req.user ? `${req.user.username}` : "no user name"; // assuming req.user is set after authentication
   console.log(
     `${new Date().toISOString()} - ${req.method} ${req.url} - ${
       res.statusCode
@@ -18,11 +37,22 @@ function logRequest(req, res, startTime) {
   );
 }
 
+// apply authentication middleware. Continue if authorized
+function applyAuthentication(req, res, callback) {
+  authenticate(req, res, () => {
+    // authentication successful
+    callback();
+  });
+}
+
 // Route handler function
 function handleRequest(req, res) {
-  const startTime = Date.now();
-  const url = new URL(req.url, `http://${req.headers.host}`);
-  const path = url.pathname;
+  const startTime = Date.now(); // start time for logging
+  const url = new URL(req.url, `http://${req.headers.host}`); // parse URL
+  const path = url.pathname; // get path
+
+  // set security headers
+  setSecurityHeaders(res);
 
   // Add CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -30,7 +60,10 @@ function handleRequest(req, res) {
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, OPTIONS"
   );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-API-Key");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-API-Key"
+  );
 
   // Handle preflight requests
   if (req.method === "OPTIONS") {
@@ -40,13 +73,26 @@ function handleRequest(req, res) {
     return;
   }
 
-  // Route to different services based on path
-  if (path.startsWith("/api/users")) {
-    handleUsersRoute(req, res, startTime);
+  // ****** SERVICE ROUTING ******
+  if (path === "/api/login") {
+    // login endpont - no authentication required
+    handleLogin(req, res);
+    logRequest(req, res, startTime);
+  } else if (path.startsWith("/api/users")) {
+    // Protected route - requires authentication
+    applyAuthentication(req, res, () => {
+      handleUsersRoute(req, res, startTime);
+    });
   } else if (path.startsWith("/api/products")) {
-    handleProductsRoute(req, res, startTime);
+    // Protected route - requires authentication
+    applyAuthentication(req, res, () => {
+      handleProductsRoute(req, res, startTime);
+    });
   } else if (path.startsWith("/api/orders")) {
-    handleOrdersRoute(req, res, startTime);
+    // Protected route - requires authentication
+    applyAuthentication(req, res, () => {
+      handleOrdersRoute(req, res, startTime);
+    });
   } else if (path === "/health") {
     handleHealthCheck(req, res, startTime);
   } else if (path === "/") {
@@ -206,11 +252,11 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Secure API Gateway running at http://localhost:${PORT}/`);
   console.log(`Available endpoints:`);
-  console.log(`   GET  /api/users    - Get all users`);
-  console.log(`   POST /api/users    - Create user`);
-  console.log(`   GET  /api/products - Get all products`);
-  console.log(`   GET  /api/orders   - Get all orders`);
-  console.log(`   POST /api/orders   - Create order`);
+  console.log(`   GET  /api/users    - Get all users (authentication required)`);
+  console.log(`   POST /api/users    - Create user (authentication required)`);
+  console.log(`   GET  /api/products - Get all products (authentication required)`);
+  console.log(`   GET  /api/orders   - Get all orders (authentication required)`);
+  console.log(`   POST /api/orders   - Create order (authentication required)`);
   console.log(`   GET  /health       - Health check`);
   console.log(`   GET  /             - API documentation`);
 });

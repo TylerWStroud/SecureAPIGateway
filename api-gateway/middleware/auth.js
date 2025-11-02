@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET || "default-secret";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
-const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS);
+const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS) || 12;
 /**
  * in-memory user store (replace with database)
  * passwords are bcrypt hashed
