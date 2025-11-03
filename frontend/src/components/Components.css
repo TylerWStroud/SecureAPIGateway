@@ -1,4 +1,16 @@
-/* GLOBALS */
+/* ========= GLOBALS  ========= */
+.section-container{
+    min-width: 40rem;
+}
+/* 
+FOR MOBILE. KEEP COMMENTED OUT UNTIL MOBILE IS NECESSARY */
+@media (max-width: 500px){
+    .section-container{
+        min-width: 15rem;
+        width: fit-content;
+    }
+} 
+
 .button-container{
     display: flex;
     justify-content: center;
@@ -14,6 +26,7 @@
 .two-button-container > button:first-child{
     grid-column: 2;
 }
+
 .refresh-button{
     grid-column: 3;
     padding: 5px;
@@ -29,13 +42,13 @@
 .refresh-button:hover img{
     transform: rotate(360deg);
 }
-
 .light .refresh-button img{
     filter: invert(1);
 }
 
 .item-container{
     border: 1px solid #555555;
+    border-radius: 0.25rem;
     padding: 1rem;
     margin: 1rem 0;
     text-align: left;
@@ -50,8 +63,11 @@
     gap: 10rem;
     border-bottom: 1px dashed  #555555
 }
+/* ============================== */
 
-/* ORDERS */
+
+/* ========= COMPONENTS ========= */
+/* Orders */
 .order-card{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -59,13 +75,52 @@
     border-bottom: 1px dashed  #555555
 }
 
-/* PRODUCTS */
+/* Products */
+.product-card{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    border-bottom: 1px dashed  #555555
+}
 
-/* USERS */
+/* Users */
 .user-card{
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
     border-bottom: 1px dashed  #555555
 }
-/* HEALTH CHECK */
+
+/* Health Check */
+
+/* Login */
+.login-container{
+    border: 2px solid;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.login-form{
+    /* border: 1px dashed green; */
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    min-width: 20rem;
+    gap: 1rem;
+}
+.form-input{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.login-button{
+    /* border: 1px dashed white; */
+    width: fit-content;
+    align-self: center;
+    min-width: 10rem;
+}
+
+/* ============================== */

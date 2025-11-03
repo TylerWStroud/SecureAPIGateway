@@ -119,13 +119,13 @@ export function App() {
           </button>
         </nav>
       </header>
-      <button onClick={handleLogout}>Logout</button>
       <main className="App-main">
         {activeTab === "users" && <UserList />}
         {activeTab === "products" && <ProductList />}
         {activeTab === "orders" && <OrderList />}
         {activeTab === "health" && <HealthCheck />}
       </main>
+      <button style={{ width: "fit-content", alignSelf: "center", marginTop: 10}} onClick={handleLogout}>Logout</button>
     </div>
   );
 }

@@ -29,7 +29,7 @@ export const HealthCheck: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
+    <div className="section-container">
       <h2>API Gateway Health Check</h2>
       <nav className="button-container">
         <RefreshButton onClick={checkHealth} />

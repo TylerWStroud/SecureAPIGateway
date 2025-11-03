@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { orderService, type Order } from "../services/api";
 import RefreshButton from "./RefreshButton";
-
 import "./Components.css";
 
 export const OrderList: React.FC = () => {
@@ -47,7 +46,7 @@ export const OrderList: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
+    <div className="section-container">
       <h2>Orders</h2>
       <nav className="two-button-container">
         <button onClick={createOrder}>Create New Order</button>

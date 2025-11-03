@@ -68,7 +68,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         {error && <div className="error-message">{error}</div>}
 
         {/* Login/Submit Button */}
-        <button type="submit" disabled={loading}>
+        <button className="login-button" type="submit" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
       </form>

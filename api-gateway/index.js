@@ -7,11 +7,11 @@ import { handleLogin, authenticate } from "./middleware/auth.js";
 dotenv.config();
 
 // Mock backend services
-const backendServices = {
-  users: "http://localhost:3001",
-  products: "http://localhost:3002",
-  orders: "http://localhost:3003",
-};
+// const backendServices = {
+//   users: "http://localhost:3001",
+//   products: "http://localhost:3002",
+//   orders: "http://localhost:3003",
+// };
 
 // Security headers middleware
 function setSecurityHeaders(res) {

@@ -45,7 +45,7 @@ export const UserList: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
+    <div className="section-container">
       <h2>Users</h2>
       <nav className="two-button-container">
         <button onClick={createUser}>Create New User</button>
