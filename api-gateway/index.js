@@ -74,7 +74,7 @@ function handleRequest(req, res) {
   }
 
   // ****** SERVICE ROUTING ******
-  if (path === "/api/login") {
+  if (path === "/auth/login") {
     // login endpont - no authentication required
     handleLogin(req, res);
     logRequest(req, res, startTime);
@@ -129,13 +129,19 @@ function handleUsersRoute(req, res, startTime) {
     );
   } else {
     res.statusCode = 405;
-    res.end(JSON.stringify({ error: "Method not allowed" }));
+    res.end(
+      JSON.stringify({
+        error: "Method not allowed",
+        code: "METHOD_NOT_ALLOWED",
+      })
+    );
   }
 
   logRequest(req, res, startTime);
 }
 
 function handleProductsRoute(req, res, startTime) {
+  // Products route
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
 
@@ -153,13 +159,19 @@ function handleProductsRoute(req, res, startTime) {
     );
   } else {
     res.statusCode = 405;
-    res.end(JSON.stringify({ error: "Method not allowed" }));
+    res.end(
+      JSON.stringify({
+        error: "Method not allowed",
+        code: "METHOD_NOT_ALLOWED",
+      })
+    );
   }
 
   logRequest(req, res, startTime);
 }
 
 function handleOrdersRoute(req, res, startTime) {
+  // Orders service route
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
 
@@ -185,13 +197,19 @@ function handleOrdersRoute(req, res, startTime) {
     );
   } else {
     res.statusCode = 405;
-    res.end(JSON.stringify({ error: "Method not allowed" }));
+    res.end(
+      JSON.stringify({
+        error: "Method not allowed",
+        code: "METHOD_NOT_ALLOWED",
+      })
+    );
   }
 
   logRequest(req, res, startTime);
 }
 
 function handleHealthCheck(req, res, startTime) {
+  // Health check endpoint
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
   res.end(
@@ -206,6 +224,7 @@ function handleHealthCheck(req, res, startTime) {
 }
 
 function handleRoot(req, res, startTime) {
+  // API documentation
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
   res.end(
@@ -213,11 +232,12 @@ function handleRoot(req, res, startTime) {
       message: "Secure API Gateway",
       version: "1.0.0",
       endpoints: [
-        "GET /api/users - Get all users",
-        "POST /api/users - Create user",
-        "GET /api/products - Get all products",
-        "GET /api/orders - Get all orders",
-        "POST /api/orders - Create order",
+        "POST /auth/login - Authenticate and get Bearer token",
+        "GET /api/users - Get all users (requires auth)",
+        "POST /api/users - Create user (requires auth)",
+        "GET /api/products - Get all products (requires auth)",
+        "GET /api/orders - Get all orders (requires auth)",
+        "POST /api/orders - Create order (requires auth)",
         "GET /health - Health check",
       ],
     })
@@ -227,6 +247,7 @@ function handleRoot(req, res, startTime) {
 }
 
 function handleNotFound(req, res, startTime) {
+  // 404 handler
   res.statusCode = 404;
   res.setHeader("Content-Type", "application/json");
   res.end(
@@ -234,6 +255,7 @@ function handleNotFound(req, res, startTime) {
       error: "Not Found",
       message: `Route ${req.method} ${req.url} not found`,
       availableEndpoints: [
+        "/auth/login",
         "/api/users",
         "/api/products",
         "/api/orders",
@@ -252,10 +274,16 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`Secure API Gateway running at http://localhost:${PORT}/`);
   console.log(`Available endpoints:`);
-  console.log(`   GET  /api/users    - Get all users (authentication required)`);
+  console.log(
+    `   GET  /api/users    - Get all users (authentication required)`
+  );
   console.log(`   POST /api/users    - Create user (authentication required)`);
-  console.log(`   GET  /api/products - Get all products (authentication required)`);
-  console.log(`   GET  /api/orders   - Get all orders (authentication required)`);
+  console.log(
+    `   GET  /api/products - Get all products (authentication required)`
+  );
+  console.log(
+    `   GET  /api/orders   - Get all orders (authentication required)`
+  );
   console.log(`   POST /api/orders   - Create order (authentication required)`);
   console.log(`   GET  /health       - Health check`);
   console.log(`   GET  /             - API documentation`);
