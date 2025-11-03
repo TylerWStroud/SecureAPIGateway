@@ -24,7 +24,7 @@ Once you run through the installation, open your terminal and run the following 
   If your terminal returns versions for both, you have successfully installed Nodejs. 
 
 ## Running api-gateway
-cd to the folder containing index.mjs file  
+from parent folder, cd to the folder containing the API related index.js file  
 `cd api-gateway`  
 run the following command  
 `npm start`  
