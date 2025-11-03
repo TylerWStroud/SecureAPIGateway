@@ -28,7 +28,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       onLoginSuccess(); // Notify parent component of successful login
     } catch (error: any) {
       setError(
-        error.response?.data?.message || "Login failed. Please try again."
+        "Login failed. Please try again."
       );
       console.error("Login error:", error);
     } finally {
