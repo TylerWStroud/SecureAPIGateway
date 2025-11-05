@@ -37,9 +37,10 @@ Logs outgoing requests for debugging
 api.interceptors.request.use(
   // config contains details about the request being made
   (config) => {
-    console.log(
-      `Making ${config.method?.toUpperCase()} request to ${config.url}`
-    ); // gets HTTP method (GET,POST,etc.) and URL
+    const token = localStorage.getItem("authToken");
+    if (token){
+      config.headers.Authorization = `Bearer ${token}`;
+    }
     return config; // must return config for request to proceed
   },
   // error handler for request errors

@@ -30,13 +30,13 @@ export const ProductList: React.FC = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
+    <div className="section-container">
       <h2>Products</h2>
       <nav className="button-container">
         <RefreshButton onClick={fetchProducts} />
       </nav>
 
-      <div className="product-list">
+      <div className="item-container">
         {products.map((product) => (
           <div key={product.id} className="product-card">
             <h3>{product.name}</h3>
