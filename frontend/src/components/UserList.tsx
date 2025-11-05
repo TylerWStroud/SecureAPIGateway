@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { userService, type User, type ApiResponse } from "../services/api";
+import React, { useState, useEffect } from "react";
+import { userService, type User } from "../services/api";
 import RefreshButton from "./RefreshButton";
 import "./Components.css";
 
