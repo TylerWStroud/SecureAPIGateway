@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { api } from "../services/api";
 import "./Components.css";
 
@@ -12,6 +12,17 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sessionMessage, setSessionMessage] = useState("");
+
+  // When the login page loads, check if we stored a "session expired" message
+  useEffect(() => {
+    const msg = localStorage.getItem("sessionExpired");
+    if (msg) {
+      setSessionMessage(msg);
+      // clear it so if the user refreshes it doesn't keep showing
+      localStorage.removeItem("sessionExpired");
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent default form submission
@@ -27,9 +38,7 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
       onLoginSuccess(); // Notify parent component of successful login
     } catch (error: any) {
-      setError(
-        "Login failed. Please try again."
-      );
+      setError("Login failed. Please try again.");
       console.error("Login error:", error);
     } finally {
       setLoading(false); // Reset loading state
@@ -39,6 +48,13 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   return (
     // Login form UI
     <div className="login-container">
+      {/* show session-expired message if we were kicked out */}
+      {sessionMessage && (
+        <div style={{ color: "orange", marginBottom: "10px" }}>
+          {sessionMessage}
+        </div>
+      )}
+
       <h2>Login</h2>
       <form onSubmit={handleLogin} className="login-form">
         <div className="form-input">
