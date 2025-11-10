@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { UserList } from "./components/UserList";
 import { ProductList } from "./components/ProductList";
 import { OrderList } from "./components/OrderList";
@@ -10,61 +10,80 @@ export function App() {
   const [activeTab, setActiveTab] = useState<
     "users" | "products" | "orders" | "health"
   >("users");
-  const [isLight, setIsLight] = useState<boolean>(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLight, setIsLight] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState<string | null>(null);
 
-  // Check if user is authenticated on mount
+  // Check token and decode basic info
   useEffect(() => {
     const token = localStorage.getItem("authToken");
-    setIsAuthenticated(!!token);
+    if (token) {
+      setIsAuthenticated(true);
+      try {
+        // Decode JWT payload (not secure for secrets, just UI logic)
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        if (payload?.roles?.length) {
+          setUserRole(payload.roles[0]); // e.g. "admin" or "user"
+        }
+      } catch (e) {
+        console.warn("Failed to decode token:", e);
+      }
+    } else {
+      setIsAuthenticated(false);
+      setUserRole(null);
+    }
   }, []);
 
-  // Load saved theme preference or detect system preference
+  // Theme handling
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme) {
       setIsLight(savedTheme === "light");
       return;
     }
-
-    // Otherwise, detect and watch for system preference
-    const matchMedia = window.matchMedia("(prefers-color-scheme: light)");
-    setIsLight(matchMedia.matches);
-
-    const handleChange = (e: MediaQueryListEvent) => {
-      setIsLight(e.matches);
-    };
-
-    matchMedia.addEventListener("change", handleChange);
-
-    return () => {
-      matchMedia.removeEventListener("change", handleChange);
-    };
+    const media = window.matchMedia("(prefers-color-scheme: light)");
+    setIsLight(media.matches);
+    const listener = (e: MediaQueryListEvent) => setIsLight(e.matches);
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
   }, []);
 
-  // Apply theme to body element
   useEffect(() => {
     document.documentElement.className = isLight ? "light" : "";
     localStorage.setItem("theme", isLight ? "light" : "dark");
   }, [isLight]);
 
-  // Toggle theme handler b/w light & dark
-  const toggleTheme = () => {
-    setIsLight(!isLight);
-  };
+  const toggleTheme = () => setIsLight(!isLight);
 
-  // Handle successful login
   const handleLoginSuccess = () => {
-    setIsAuthenticated(true);
-  };
+  setIsAuthenticated(true);
+  const token = localStorage.getItem("authToken");
+  if (token) {
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const role = payload?.roles?.[0] || null;
+      setUserRole(role);
 
-  // Handle logout
+      // Automatically select the correct starting tab
+      if (role === "admin") {
+        setActiveTab("users");
+      } else {
+        setActiveTab("products");
+      }
+    } catch (e) {
+      console.warn("Failed to decode token:", e);
+    }
+  }
+};
+
+
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     setIsAuthenticated(false);
+    setUserRole(null);
   };
 
-  // show login page if not authenticated
+  // Show login if not authenticated
   if (!isAuthenticated) {
     return (
       <div className="App">
@@ -92,13 +111,17 @@ export function App() {
             {isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
           </button>
         </nav>
+
         <nav className="tab-navigation">
-          <button
-            className={activeTab === "users" ? "active" : ""}
-            onClick={() => setActiveTab("users")}
-          >
-            Users
-          </button>
+          {/* Role-based tab visibility */}
+          {userRole === "admin" && (
+            <button
+              className={activeTab === "users" ? "active" : ""}
+              onClick={() => setActiveTab("users")}
+            >
+              Users
+            </button>
+          )}
           <button
             className={activeTab === "products" ? "active" : ""}
             onClick={() => setActiveTab("products")}
@@ -119,13 +142,20 @@ export function App() {
           </button>
         </nav>
       </header>
+
       <main className="App-main">
-        {activeTab === "users" && <UserList />}
+        {activeTab === "users" && userRole === "admin" && <UserList />}
         {activeTab === "products" && <ProductList />}
         {activeTab === "orders" && <OrderList />}
         {activeTab === "health" && <HealthCheck />}
       </main>
-      <button style={{ width: "fit-content", alignSelf: "center", marginTop: 10}} onClick={handleLogout}>Logout</button>
+
+      <button
+        style={{ width: "fit-content", alignSelf: "center", marginTop: 10 }}
+        onClick={handleLogout}
+      >
+        Logout
+      </button>
     </div>
   );
 }

@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  # MongoDB
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - secure-net
+
+  # Users Service
+  users-service:
+    build: ./backend/users-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/usersDB     
+      - JWT_SECRET=supersecretkey                     
+    networks:
+      - secure-net
+
+  # Products Service
+  products-service:
+    build: ./backend/products-service
+    ports:
+      - "3002:3002"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=${MONGO_URL}
+    networks:
+      - secure-net
+
+  # Orders Service
+  orders-service:
+    build: ./backend/orders-service
+    ports:
+      - "3003:3003"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGO_URL=${MONGO_URL}
+    networks:
+      - secure-net
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - users-service
+      - products-service
+      - orders-service
+    environment:
+      - USERS_SERVICE=http://users-service:3001
+      - PRODUCTS_SERVICE=http://products-service:3002
+      - ORDERS_SERVICE=http://orders-service:3003
+      - JWT_SECRET=supersecretkey                     
+    networks:
+      - secure-net
+    restart: always
+
+  # Frontend
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - secure-net
+    restart: always
+
+volumes:
+  mongo-data:
+
+networks:
+  secure-net:
+    driver: bridge

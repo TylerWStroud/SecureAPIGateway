@@ -1,67 +1,133 @@
 import React, { useState, useEffect } from "react";
-import { orderService, type Order } from "../services/api";
+import { apiClient } from "../apiClient";
 import RefreshButton from "./RefreshButton";
 import "./Components.css";
 
+interface Order {
+  _id?: string;
+  id?: string;
+  orderNumber?: string;
+  productId: string;
+  productName?: string;
+  status: string;
+}
+
+interface Product {
+  _id: string;
+  name: string;
+}
+
 export const OrderList: React.FC = () => {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const [status, setStatus] = useState("pending");
+  const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetchOrders = async () => {
-    setLoading(true);
-    setError(null);
     try {
-      const response = await orderService.getOrders();
-      setOrders(response.data.data);
+      const res = await apiClient.get("/api/orders");
+      setOrders(res.data.data || []);
     } catch (err) {
-      setError("Failed to fetch orders");
       console.error("Error fetching orders:", err);
-    } finally {
-      setLoading(false);
+      setError("Failed to fetch orders");
     }
   };
 
-  const createOrder = async () => {
-    const newOrder = {
-      userId: 1,
-      productId: 1,
-      status: "pending",
-    };
-
+  const fetchProducts = async () => {
     try {
-      await orderService.createOrder(newOrder);
-      fetchOrders(); // Refresh the list
+      const res = await apiClient.get("/api/products");
+      setProducts(res.data.data || []);
     } catch (err) {
-      setError("Failed to create order");
+      console.error("Error fetching products:", err);
+      setError("Failed to fetch products");
+    }
+  };
+
+  const createOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedProduct) {
+      alert("Please select a product first!");
+      return;
+    }
+
+    setCreating(true);
+    try {
+      await apiClient.post("/api/orders", { productId: selectedProduct, status });
+      setSelectedProduct("");
+      setStatus("pending");
+      await fetchOrders();
+    } catch (err) {
       console.error("Error creating order:", err);
+      setError("Failed to create order");
+    } finally {
+      setCreating(false);
     }
   };
 
   useEffect(() => {
-    fetchOrders();
+    Promise.all([fetchOrders(), fetchProducts()]).finally(() =>
+      setLoading(false)
+    );
   }, []);
 
-  if (loading) return <div>Loading orders...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div>Loading orders and products...</div>;
+  if (error) return <div style={{ color: "red" }}>Error: {error}</div>;
 
   return (
     <div className="section-container">
-      <h2>Orders</h2>
-      <nav className="two-button-container">
-        <button onClick={createOrder}>Create New Order</button>
-        <RefreshButton onClick={fetchOrders} />
-      </nav>
+      <div className="section-header">
+        <h2>Orders</h2>
+        <div className="refresh-wrapper">
+          <RefreshButton onClick={fetchOrders} />
+        </div>
+      </div>
+
+      <form onSubmit={createOrder} className="order-form">
+        <label>
+          Product:
+          <select
+            value={selectedProduct}
+            onChange={(e) => setSelectedProduct(e.target.value)}
+            required
+          >
+            <option value="">-- Select a Product --</option>
+            {products.map((p) => (
+              <option key={p._id} value={p._id}>
+                {p.name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Status:
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="completed">Completed</option>
+          </select>
+        </label>
+
+        <button type="submit" disabled={!selectedProduct || creating}>
+          {creating ? "Creating..." : "Create Order"}
+        </button>
+      </form>
 
       <div className="item-container">
-        {orders.map((order) => (
-          <div key={order.id} className="order-card">
-            <h3>Order #{order.id}</h3>
-            <p>User ID: {order.userId}</p>
-            <p>Product ID: {order.productId}</p>
-            <p>Status: {order.status}</p>
-          </div>
-        ))}
+        {orders.length > 0 ? (
+          orders.map((order) => (
+            <div key={order._id || order.id} className="order-card">
+              <h3>{order.orderNumber || `Order #${order._id}`}</h3>
+              <p>Product: {order.productName || order.productId}</p>
+              <p>Status: {order.status}</p>
+            </div>
+          ))
+        ) : (
+          <p>No orders found.</p>
+        )}
       </div>
     </div>
   );
