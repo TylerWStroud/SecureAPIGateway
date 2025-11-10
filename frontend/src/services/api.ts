@@ -57,6 +57,14 @@ Logs incoming responses for debugging
 api.interceptors.response.use(
   (response) => response, // simply return response on success
   (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.setItem(
+        "sessionExpired",
+        "Your session has expired. Please log in again."
+      );
+      localStorage.removeItem("authToken");
+      window.location.href = "/";
+    }		
     console.error("API Error:", error.response?.data || error.message); // log error details
     return Promise.reject(error); // passes error to original caller
   }

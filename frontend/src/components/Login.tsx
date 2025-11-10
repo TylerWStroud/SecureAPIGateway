@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { apiClient } from "../apiClient";
+import React, { useState, useEffect } from "react";
+import { api } from "../services/api";
 import "./Components.css";
 
 interface LoginProps {
@@ -11,6 +11,17 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sessionMessage, setSessionMessage] = useState("");
+
+  // When the login page loads, check if we stored a "session expired" message
+  useEffect(() => {
+    const msg = localStorage.getItem("sessionExpired");
+    if (msg) {
+      setSessionMessage(msg);
+      // clear it so if the user refreshes it doesn't keep showing
+      localStorage.removeItem("sessionExpired");
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,11 +34,13 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       const { token } = response.data;
       if (!token) throw new Error("Token missing in response");
 
-      localStorage.setItem("authToken", token);
-      onLoginSuccess();
-    } catch (err: any) {
-      console.error("Login error:", err);
-      setError("Login failed. Please check your credentials and try again.");
+      // store token in local storage
+      localStorage.setItem("authToken", access_token);
+
+      onLoginSuccess(); // Notify parent component of successful login
+    } catch (error: any) {
+      setError("Login failed. Please try again.");
+      console.error("Login error:", error);
     } finally {
       setLoading(false);
     }
@@ -35,6 +48,13 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
   return (
     <div className="login-container">
+      {/* show session-expired message if we were kicked out */}
+      {sessionMessage && (
+        <div style={{ color: "orange", marginBottom: "10px" }}>
+          {sessionMessage}
+        </div>
+      )}
+
       <h2>Login</h2>
       <form onSubmit={handleLogin} className="login-form">
         <div className="form-input">
