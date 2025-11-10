@@ -1,126 +1,125 @@
 /* ========= GLOBALS  ========= */
-.section-container{
-    min-width: 40rem;
+.section-container {
+  min-width: 40rem;
 }
 /* 
 FOR MOBILE. KEEP COMMENTED OUT UNTIL MOBILE IS NECESSARY */
-@media (max-width: 500px){
-    .section-container{
-        min-width: 15rem;
-        width: fit-content;
-    }
-} 
-
-.button-container{
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-.two-button-container{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-.two-button-container > button:first-child{
-    grid-column: 2;
-}
-
-.refresh-button{
-    grid-column: 3;
-    padding: 5px;
+@media (max-width: 500px) {
+  .section-container {
+    min-width: 15rem;
     width: fit-content;
-    display: flex;
-    justify-content: center;
-    justify-self: end;
-}
-.refresh-button img{
-    width: 20px;
-    height: auto;
-}
-.refresh-button:hover img{
-    transform: rotate(360deg);
-}
-.light .refresh-button img{
-    filter: invert(1);
+  }
 }
 
-.item-container{
-    border: 1px solid #555555;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    margin: 1rem 0;
-    text-align: left;
-    height: 100%;
-    overflow-y: auto;
+.button-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.two-button-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.two-button-container > button:first-child {
+  grid-column: 2;
 }
 
-.item-card{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10rem;
-    border-bottom: 1px dashed  #555555
+.refresh-button {
+  grid-column: 3;
+  padding: 5px;
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  justify-self: end;
+}
+.refresh-button img {
+  width: 20px;
+  height: auto;
+}
+.refresh-button:hover img {
+  transform: rotate(360deg);
+}
+.light .refresh-button img {
+  filter: invert(1);
+}
+
+.item-container {
+  border: 1px solid #555555;
+  border-radius: 0.25rem;
+  padding: 1rem;
+  margin: 1rem 0;
+  text-align: left;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.item-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10rem;
+  border-bottom: 1px dashed #555555;
 }
 /* ============================== */
 
-
 /* ========= COMPONENTS ========= */
 /* Orders */
-.order-card{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    align-items: center;
-    border-bottom: 1px dashed  #555555
+.order-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  align-items: center;
+  border-bottom: 1px dashed #555555;
 }
 
 /* Products */
-.product-card{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    border-bottom: 1px dashed  #555555
+.product-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  border-bottom: 1px dashed #555555;
 }
 
 /* Users */
-.user-card{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    border-bottom: 1px dashed  #555555
+.user-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  border-bottom: 1px dashed #555555;
 }
 
 /* Health Check */
 
 /* Login */
-.login-container{
-    border: 2px solid;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    width: fit-content;
-    display: flex;
-    flex-direction: column;
+.login-container {
+  border: 2px solid;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
 }
 
-.login-form{
-    /* border: 1px dashed green; */
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    min-width: 20rem;
-    gap: 1rem;
+.login-form {
+  /* border: 1px dashed green; */
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  min-width: 20rem;
+  gap: 1rem;
 }
-.form-input{
-    display: flex;
-    justify-content: space-evenly;
+.form-input {
+  display: flex;
+  justify-content: space-evenly;
 }
 
-.login-button{
-    /* border: 1px dashed white; */
-    width: fit-content;
-    align-self: center;
-    min-width: 10rem;
+.login-button {
+  /* border: 1px dashed white; */
+  width: fit-content;
+  align-self: center;
+  min-width: 10rem;
 }
 
 /* ============================== */
