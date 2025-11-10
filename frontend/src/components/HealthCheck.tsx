@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { healthService } from "../services/api";
 import RefreshButton from "./RefreshButton";
+import "./Components.css";
 
 export const HealthCheck: React.FC = () => {
   const [health, setHealth] = useState<any>(null);
@@ -30,10 +31,12 @@ export const HealthCheck: React.FC = () => {
 
   return (
     <div className="section-container">
-      <h2>API Gateway Health Check</h2>
-      <nav className="button-container">
-        <RefreshButton onClick={checkHealth} />
-      </nav>
+      <div className="section-header">
+        <h2>API Gateway Health Check</h2>
+        <div className="refresh-wrapper">
+          <RefreshButton onClick={checkHealth} />
+        </div>
+      </div>
 
       {health && (
         <div className="health-info">

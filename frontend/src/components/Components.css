@@ -1,126 +1,229 @@
-/* ========= GLOBALS  ========= */
-.section-container{
-    min-width: 40rem;
-}
-/* 
-FOR MOBILE. KEEP COMMENTED OUT UNTIL MOBILE IS NECESSARY */
-@media (max-width: 500px){
-    .section-container{
-        min-width: 15rem;
-        width: fit-content;
-    }
-} 
-
-.button-container{
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-.two-button-container{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-}
-.two-button-container > button:first-child{
-    grid-column: 2;
+.section-container {
+  min-width: 40rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  transition: background 0.3s ease;
 }
 
-.refresh-button{
-    grid-column: 3;
-    padding: 5px;
-    width: fit-content;
-    display: flex;
-    justify-content: center;
-    justify-self: end;
-}
-.refresh-button img{
-    width: 20px;
-    height: auto;
-}
-.refresh-button:hover img{
-    transform: rotate(360deg);
-}
-.light .refresh-button img{
-    filter: invert(1);
+.light .section-container {
+  background: #fafafa;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.item-container{
-    border: 1px solid #555555;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    margin: 1rem 0;
-    text-align: left;
-    height: 100%;
-    overflow-y: auto;
+/* ==== Containers ==== */
+.item-container {
+  border: 1px solid rgba(120,120,120,0.3);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 1rem;
+  text-align: left;
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
 }
 
-.item-card{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10rem;
-    border-bottom: 1px dashed  #555555
+.item-container::-webkit-scrollbar {
+  width: 6px;
 }
-/* ============================== */
-
-
-/* ========= COMPONENTS ========= */
-/* Orders */
-.order-card{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    align-items: center;
-    border-bottom: 1px dashed  #555555
+.item-container::-webkit-scrollbar-thumb {
+  background: #999;
+  border-radius: 10px;
 }
 
-/* Products */
-.product-card{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    border-bottom: 1px dashed  #555555
+/* ==== Cards ==== */
+.user-card,
+.product-card,
+.order-card {
+  background: rgba(255,255,255,0.05);
+  padding: 0.8rem 1.2rem;
+  margin-bottom: 0.8rem;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(120,120,120,0.3);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.user-card:hover,
+.product-card:hover,
+.order-card:hover {
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-2px);
+}
+.light .user-card,
+.light .product-card,
+.light .order-card {
+  background: #fff;
+  border: 1px solid #ddd;
+}
+.light .user-card:hover,
+.light .product-card:hover,
+.light .order-card:hover {
+  background: #f9f9f9;
 }
 
-/* Users */
-.user-card{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    border-bottom: 1px dashed  #555555
+/* ==== Forms ==== */
+form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
-/* Health Check */
-
-/* Login */
-.login-container{
-    border: 2px solid;
-    padding: 1.5rem;
-    border-radius: 0.5rem;
-    width: fit-content;
-    display: flex;
-    flex-direction: column;
+input, select {
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #777;
+  background: #222;
+  color: white;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+input:focus, select:focus {
+  border-color: #0078ff;
+  outline: none;
+}
+.light input, .light select {
+  background: #fff;
+  color: #222;
+  border: 1px solid #ccc;
 }
 
-.login-form{
-    /* border: 1px dashed green; */
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    min-width: 20rem;
-    gap: 1rem;
+/* ==== Buttons ==== */
+/*
+button {
+  border-radius: 8px;
+  border: none;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #444;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
 }
-.form-input{
-    display: flex;
-    justify-content: space-evenly;
+button:hover {
+  background-color: #666;
+  transform: translateY(-2px);
+}
+.light button {
+  background-color: #ddd;
+  color: #222;
+}
+.light button:hover {
+  background-color: #ccc;
+}
+  */
+
+/* ==== Login ==== */
+.login-container {
+  border: 2px solid rgba(255,255,255,0.2);
+  padding: 2rem;
+  border-radius: 12px;
+  width: 22rem;
+  text-align: left;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  margin-top: 10rem;
+}
+.light .login-container {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
-.login-button{
-    /* border: 1px dashed white; */
-    width: fit-content;
-    align-self: center;
-    min-width: 10rem;
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.form-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.error-message {
+  color: #ff5555;
+  font-size: 0.9rem;
+}
+/* From Uiverse.io by andrew-demchenk0 */
+.button {
+  all: unset;
+  --main-focus: #2d8cf0;
+  --font-color: #dedede;
+  --bg-color-sub: #222;
+  --bg-color: #323232;
+  --main-color: #dedede;
+  position: relative;
+  width: 150px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+  background-color: var(--bg-color);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-/* ============================== */
+.button,
+.button__icon,
+.button__text {
+  transition: all 0.3s ease;
+}
+
+.button .button__text {
+  transform: translateX(33px);
+  color: var(--font-color);
+  font-weight: 600;
+}
+
+.button .button__icon {
+  position: absolute;
+  transform: translateX(111px); /* changed from 109px → 111px */
+  height: 100%;
+  width: 39px;
+  background-color: var(--bg-color-sub);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button .svg {
+  width: 20px;
+  fill: var(--main-color);
+}
+
+.button:hover {
+  background: var(--bg-color);
+}
+
+.button:hover .button__text {
+  color: transparent;
+}
+
+.button:hover .button__icon {
+  width: 150px; /* changed from 148px → 150px */
+  transform: translateX(0);
+}
+
+.button:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0px 0px var(--main-color);
+}
+
+.refresh-wrapper {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
+
+.section-container {
+  position: relative; /* ensures the refresh button anchors inside each card */
+  padding-top: 3rem;  /* add breathing room above content */
+}

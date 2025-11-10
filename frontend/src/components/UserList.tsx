@@ -1,38 +1,38 @@
 import React, { useState, useEffect } from "react";
-import { userService, type User } from "../services/api";
+import { apiClient } from "../apiClient";
 import RefreshButton from "./RefreshButton";
 import "./Components.css";
 
+interface User {
+  _id?: string;
+  id?: string;
+  username: string;
+  roles?: string[];
+}
+
 export const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const fetchUsers = async () => {
-    setLoading(true);
-    setError(null);
     try {
-      const response = await userService.getUsers();
-      setUsers(response.data.data);
+      const response = await apiClient.get("/api/users");
+      setUsers(response.data.data || []);
     } catch (err) {
-      setError("Failed to fetch users");
       console.error("Error fetching users:", err);
-    } finally {
-      setLoading(false);
     }
   };
 
-  const createUser = async () => {
-    const newUser = {
-      name: `User ${Date.now()}`,
-      email: `user${Date.now()}@example.com`,
-    };
-
+  const createUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!username || !password) return;
     try {
-      await userService.createUser(newUser);
-      fetchUsers(); // Refresh the list
+      await apiClient.post("/auth/signup", { username, password });
+      setUsername("");
+      setPassword("");
+      fetchUsers();
     } catch (err) {
-      setError("Failed to create user");
       console.error("Error creating user:", err);
     }
   };
@@ -41,24 +41,42 @@ export const UserList: React.FC = () => {
     fetchUsers();
   }, []);
 
-  if (loading) return <div>Loading users...</div>;
-  if (error) return <div>Error: {error}</div>;
-
   return (
     <div className="section-container">
-      <h2>Users</h2>
-      <nav className="two-button-container">
-        <button onClick={createUser}>Create New User</button>
-        <RefreshButton onClick={fetchUsers} />
-      </nav>
+      <div className="section-header">
+        <h2>Users</h2>
+        <div className="refresh-wrapper">
+          <RefreshButton onClick={fetchUsers} />
+        </div>
+      </div>
+
+      <form onSubmit={createUser} className="form-inline">
+        <input
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Add User</button>
+      </form>
 
       <div className="item-container">
-        {users.map((user) => (
-          <div key={user.id} className="user-card">
-            <h3>{user.name}</h3>
-            <p>{user.email}</p>
-          </div>
-        ))}
+        {users.length > 0 ? (
+          users.map((user) => (
+            <div key={user._id || user.id} className="user-card">
+              <h3>{user.username}</h3>
+              {user.roles && <p>Roles: {user.roles.join(", ")}</p>}
+            </div>
+          ))
+        ) : (
+          <p>No users found.</p>
+        )}
       </div>
     </div>
   );

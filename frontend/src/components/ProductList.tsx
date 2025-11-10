@@ -29,12 +29,15 @@ export const ProductList: React.FC = () => {
   if (loading) return <div>Loading products...</div>;
   if (error) return <div>Error: {error}</div>;
 
+  
   return (
     <div className="section-container">
-      <h2>Products</h2>
-      <nav className="button-container">
-        <RefreshButton onClick={fetchProducts} />
-      </nav>
+      <div className="section-header">
+        <h2>Products</h2>
+        <div className="refresh-wrapper">
+          <RefreshButton onClick={fetchProducts} />
+        </div>
+      </div>
 
       <div className="item-container">
         {products.map((product) => (

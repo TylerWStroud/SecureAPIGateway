@@ -20,7 +20,8 @@ services:
     depends_on:
       - mongodb
     environment:
-      - MONGO_URL=mongodb://mongodb:27017/ecommerce
+      - MONGO_URI=mongodb://mongodb:27017/usersDB     
+      - JWT_SECRET=supersecretkey                     
     networks:
       - secure-net
 
@@ -32,7 +33,7 @@ services:
     depends_on:
       - mongodb
     environment:
-      - MONGO_URL=mongodb://mongodb:27017/ecommerce
+      - MONGO_URL=${MONGO_URL}
     networks:
       - secure-net
 
@@ -44,7 +45,7 @@ services:
     depends_on:
       - mongodb
     environment:
-      - MONGO_URL=mongodb://mongodb:27017/ecommerce
+      - MONGO_URL=${MONGO_URL}
     networks:
       - secure-net
 
@@ -61,8 +62,10 @@ services:
       - USERS_SERVICE=http://users-service:3001
       - PRODUCTS_SERVICE=http://products-service:3002
       - ORDERS_SERVICE=http://orders-service:3003
+      - JWT_SECRET=supersecretkey                     
     networks:
       - secure-net
+    restart: always
 
   # Frontend
   frontend:
@@ -73,6 +76,7 @@ services:
       - api-gateway
     networks:
       - secure-net
+    restart: always
 
 volumes:
   mongo-data:
