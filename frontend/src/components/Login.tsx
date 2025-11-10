@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { api } from "../services/api";
+import { apiClient } from "../apiClient";
 import "./Components.css";
 
 interface LoginProps {
@@ -29,13 +29,16 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     setError("");
 
     try {
-      const response = await apiClient.post("/auth/login", { username, password });
+      const response = await apiClient.post("/auth/login", {
+        username,
+        password,
+      });
       console.log("Login response:", response.data);
       const { token } = response.data;
       if (!token) throw new Error("Token missing in response");
 
       // store token in local storage
-      localStorage.setItem("authToken", access_token);
+      localStorage.setItem("authToken", token);
 
       onLoginSuccess(); // Notify parent component of successful login
     } catch (error: any) {
@@ -88,7 +91,9 @@ export const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       </form>
 
       <div>
-        <p><strong>Demo Credentials:</strong></p>
+        <p>
+          <strong>Demo Credentials:</strong>
+        </p>
         <p>Admin: admin / admin123</p>
         <p>User: user / user123</p>
       </div>
