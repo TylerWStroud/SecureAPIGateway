@@ -10,14 +10,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// connect to MongoDB
-const MONGO_URL = process.env.MONGO_URL || "mongodb://mongodb:27017/productsDB";
+// Connect to MongoDB
+const MONGO_URL = process.env.MONGO_URL || process.env.MONGO_PRODUCTS_URL;
+
 mongoose
   .connect(MONGO_URL)
   .then(() => console.log("Connected to MongoDB - Products Service"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-// schema
+// Product schema
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
@@ -27,36 +28,48 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model("Product", productSchema);
 
-// routes
+// Routes
 app.get("/products", authenticate, async (req, res) => {
-  const products = await Product.find();
-  res.json({ message: "Products fetched successfully", data: products });
+  try {
+    const products = await Product.find();
+    res.json({ message: "Products fetched successfully", data: products });
+  } catch (err) {
+    console.error("Error fetching products:", err.message);
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
 });
 
 app.post("/products", authenticate, async (req, res) => {
   try {
     const product = new Product(req.body);
     await product.save();
-    res.status(201).json({ message: "Product created successfully", data: product });
+    res
+      .status(201)
+      .json({ message: "Product created successfully", data: product });
   } catch (error) {
+    console.error("Error creating product:", error.message);
     res.status(400).json({ error: error.message });
   }
 });
 
 app.delete("/products/:id", authenticate, async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
-  res.json({ message: "Product deleted successfully" });
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ message: "Product deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting product:", err.message);
+    res.status(400).json({ error: err.message });
+  }
 });
 
 // Fetch single product by ID (used by orders-service)
-app.get("/products/:id", async (req, res) => {
+app.get("/products/:id", authenticate, async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
     }
 
-    // respond with name and price (what orders-service needs)
     res.json({ name: product.name, price: product.price });
   } catch (err) {
     console.error("Error fetching product:", err.message);
@@ -64,8 +77,12 @@ app.get("/products/:id", async (req, res) => {
   }
 });
 
+app.get("/health", (req, res) => res.json({ status: "healthy" }));
 
-const PORT = process.env.PORT || 3002;
+// Start service
+const PORT = process.env.PRODUCTS_SERVICE_PORT || 3002;
+
+
 app.listen(PORT, "0.0.0.0", () =>
   console.log(`Products service running on port ${PORT}`)
 );

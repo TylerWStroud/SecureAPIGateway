@@ -26,7 +26,7 @@ app.get("/users", async (req, res) => {
 });
 
 // MongoDB connection
-const MONGO_URL = process.env.MONGO_URL || "mongodb://mongodb:27017/usersDB";
+const MONGO_URL = process.env.MONGO_URL || process.env.MONGO_USERS_URL;
 mongoose
   .connect(MONGO_URL)
   .then(() => {
@@ -38,7 +38,8 @@ mongoose
 app.get("/health", (req, res) => res.json({ status: "healthy" }));
 
 // Start server
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.USERS_SERVICE_PORT || 3001;
+
 app.listen(PORT, "0.0.0.0", () =>
   console.log(`Users Service running on port ${PORT}`)
 );

@@ -1,75 +1,100 @@
-version: '3.8'
-
 services:
-  # MongoDB
-  mongodb:
-    image: mongo:latest
-    container_name: mongodb
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - secure-net
 
-  # Users Service
+  # USERS SERVICE
+  
   users-service:
     build: ./backend/users-service
+    container_name: secureapigateway-users-service
     ports:
-      - "3001:3001"
-    depends_on:
-      - mongodb
+      - "${USERS_SERVICE_PORT}:3001"
+    env_file:
+      - ./.env
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/usersDB     
-      - JWT_SECRET=supersecretkey                     
+      - PORT=${USERS_SERVICE_PORT}
+      - MONGO_URL=${MONGO_USERS_URL}
     networks:
       - secure-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${USERS_SERVICE_PORT}/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Products Service
+
+  # PRODUCTS SERVICE
+ 
   products-service:
     build: ./backend/products-service
+    container_name: secureapigateway-products-service
     ports:
-      - "3002:3002"
-    depends_on:
-      - mongodb
+      - "${PRODUCTS_SERVICE_PORT}:3002"
+    env_file:
+      - ./.env
     environment:
-      - MONGO_URL=${MONGO_URL}
+      - PORT=${PRODUCTS_SERVICE_PORT}
+      - MONGO_URL=${MONGO_PRODUCTS_URL}
     networks:
       - secure-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${PRODUCTS_SERVICE_PORT}/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # Orders Service
+  
+  # ORDERS SERVICE
+ 
   orders-service:
     build: ./backend/orders-service
+    container_name: secureapigateway-orders-service
     ports:
-      - "3003:3003"
-    depends_on:
-      - mongodb
+      - "${ORDERS_SERVICE_PORT}:3003"
+    env_file:
+      - ./.env
     environment:
-      - MONGO_URL=${MONGO_URL}
+      - PORT=${ORDERS_SERVICE_PORT}
+      - MONGO_URL=${MONGO_ORDERS_URL}
     networks:
       - secure-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${ORDERS_SERVICE_PORT}/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  # API Gateway
+
+  # API GATEWAY
+
   api-gateway:
     build: ./api-gateway
+    container_name: secureapigateway-api-gateway
     ports:
-      - "3000:3000"
+      - "${API_GATEWAY_PORT}:3000"
     depends_on:
-      - users-service
-      - products-service
-      - orders-service
+      users-service:
+        condition: service_healthy
+      products-service:
+        condition: service_healthy
+      orders-service:
+        condition: service_healthy
+    env_file:
+      - ./.env
     environment:
-      - USERS_SERVICE=http://users-service:3001
-      - PRODUCTS_SERVICE=http://products-service:3002
-      - ORDERS_SERVICE=http://orders-service:3003
-      - JWT_SECRET=supersecretkey                     
+      - PORT=${API_GATEWAY_PORT}
+      - USERS_SERVICE=${USERS_SERVICE}
+      - PRODUCTS_SERVICE=${PRODUCTS_SERVICE}
+      - ORDERS_SERVICE=${ORDERS_SERVICE}
+      - JWT_SECRET=${JWT_SECRET}
     networks:
       - secure-net
     restart: always
 
-  # Frontend
+ 
+  # FRONTEND 
+
   frontend:
     build: ./frontend
+    container_name: secureapigateway-frontend
     ports:
       - "5173:80"
     depends_on:
@@ -78,8 +103,8 @@ services:
       - secure-net
     restart: always
 
-volumes:
-  mongo-data:
+
+# Docker Network
 
 networks:
   secure-net:

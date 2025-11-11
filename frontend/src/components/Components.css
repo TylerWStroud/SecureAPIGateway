@@ -37,21 +37,25 @@
 .user-card,
 .product-card,
 .order-card {
-  background: rgba(255,255,255,0.05);
+  background: rgb(61, 61, 61); 
+  backdrop-filter: blur(4px);
   padding: 0.8rem 1.2rem;
   margin-bottom: 0.8rem;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(120,120,120,0.3);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
   transition: background 0.2s ease, transform 0.2s ease;
 }
+
 .user-card:hover,
 .product-card:hover,
 .order-card:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.12); /* hover pops a bit more */
   transform: translateY(-2px);
 }
+
 .light .user-card,
 .light .product-card,
 .light .order-card {
@@ -184,7 +188,7 @@ button:hover {
 
 .button .button__icon {
   position: absolute;
-  transform: translateX(111px); /* changed from 109px → 111px */
+  transform: translateX(111px); 
   height: 100%;
   width: 39px;
   background-color: var(--bg-color-sub);
@@ -224,6 +228,229 @@ button:hover {
 }
 
 .section-container {
-  position: relative; /* ensures the refresh button anchors inside each card */
-  padding-top: 3rem;  /* add breathing room above content */
+  position: relative; 
+  padding-top: 3rem;  
+}
+
+/* From Uiverse.io by cssbuttons-io */
+button.noselect {
+  width: 150px;
+  height: 50px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: red;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+  background: #e62222;
+  position: relative;
+  overflow: hidden;
+}
+
+button.noselect,
+button.noselect span {
+  transition: 200ms;
+}
+
+button.noselect .text {
+  transform: translateX(35px);
+  color: white;
+  font-weight: bold;
+}
+
+button.noselect .icon {
+  position: absolute;
+  border-left: 1px solid #c41b1b;
+  transform: translateX(110px);
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.noselect svg {
+  width: 15px;
+  fill: #eee;
+}
+
+button.noselect:hover {
+  background: #ff3636;
+}
+
+button.noselect:hover .text {
+  color: transparent;
+}
+
+button.noselect:hover .icon {
+  width: 150px;
+  border-left: none;
+  transform: translateX(0);
+}
+
+button.noselect:focus {
+  outline: none;
+}
+
+button.noselect:active .icon svg {
+  transform: scale(0.8);
+}
+
+/* --- Delete button animation + align right fix --- */
+.product-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 10px;
+  background: var(--card-bg, #3D3D3D);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+}
+
+.product-card .noselect {
+  align-self: flex-end; /* move button to the right */
+  margin-top: 10px;
+  width: 150px;
+  height: 50px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: #e62222;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+  transition: 200ms;
+}
+
+.product-card .noselect .text {
+  transform: translateX(35px);
+  color: white;
+  font-weight: bold;
+  transition: 200ms;
+}
+
+.product-card .noselect .icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 40px;
+  border-left: 1px solid #c41b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(110px);
+  transition: all 0.2s ease;
+}
+
+.product-card .noselect svg {
+  width: 15px;
+  fill: #eee;
+}
+
+.product-card .noselect:hover {
+  background: #ff3636;
+}
+
+.product-card .noselect:hover .text {
+  color: transparent;
+}
+
+.product-card .noselect:hover .icon {
+  width: 150px;
+  border-left: none;
+  transform: translateX(0);
+}
+
+.product-card .noselect:focus {
+  outline: none;
+}
+
+.product-card .noselect:active .icon svg {
+  transform: scale(0.8);
+}
+
+/* Delete button styling for orders */
+.order-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1rem;
+  border-radius: 10px;
+  background: var(--card-bg, #3D3D3D);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  min-width: 220px;
+}
+
+.order-card .noselect {
+  align-self: flex-end;
+  margin-top: 10px;
+  width: 150px;
+  height: 50px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: #e62222;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  transition: 200ms;
+}
+
+.order-card .noselect .text {
+  transform: translateX(35px);
+  color: white;
+  font-weight: bold;
+  transition: 200ms;
+}
+
+.order-card .noselect .icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 40px;
+  border-left: 1px solid #c41b1b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(110px);
+  transition: all 0.2s ease;
+}
+
+.order-card .noselect svg {
+  width: 15px;
+  fill: #eee;
+}
+
+.order-card .noselect:hover {
+  background: #ff3636;
+}
+
+.order-card .noselect:hover .text {
+  color: transparent;
+}
+
+.order-card .noselect:hover .icon {
+  width: 150px;
+  border-left: none;
+  transform: translateX(0);
+}
+
+.order-card .noselect:focus {
+  outline: none;
+}
+
+.order-card .noselect:active .icon svg {
+  transform: scale(0.8);
 }
